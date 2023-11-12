@@ -1,6 +1,6 @@
 <template>
-  <router-link to="/home">Login</router-link>
-  <HomePage/>
+  <router-link to="/login">Sample</router-link>
+  <!-- <HomePage/> -->
   
   <div>
     <router-view></router-view>
@@ -8,12 +8,12 @@
   </template>
 
 <script>
-  import HomePage from './components/HomePage.vue'
-
+  // import HomePage from './components/HomePage.vue'
+  
 
 export default {
   name: 'App',
-  components: {HomePage}
+  components: {}
 }
 </script>
 

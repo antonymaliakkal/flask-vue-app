@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <h1>HOME</h1>
     <br><br>
     <div class="samp">
@@ -15,8 +15,8 @@
 
 <script>
 
-    import LogIn from './Login.vue'    
-    import SignUp from './SignUp.vue'
+    import LogIn from '@/components/Login.vue'    
+    import SignUp from '@/components/SignUp.vue'
 
     export default{
         name : 'HomePage',
@@ -32,9 +32,4 @@
         display: flex;
         justify-content: space-around;
     }
-</style> -->
-<template>
-    <h1>dasdsa</h1>
-</template>
-
-<script></script>
+</style>
