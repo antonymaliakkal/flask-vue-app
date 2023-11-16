@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/login">Sample</router-link>
+  <!-- <router-link to="/login">Sample</router-link> -->
   <!-- <HomePage/> -->
   
   <div>
