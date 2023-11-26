@@ -8,12 +8,17 @@
     <br>
     STOCK : <input v-model="stock" type="text">
     <br>
-    <select v-model="category_id">
+    <!-- <select v-model="category_id">
         <option v-for="(value,key) in category" :key="key">
             {{ key }}: {{ value }} 
+       </option> -->
+       <select v-model="category_id">
+       <option v-for="i in category" :key="i.key" :value="i.key">
+            {{ i.value }}
        </option>
+
     </select>
-    <button @click="submit(catid)">Submit</button>
+    <button @click="submit()">Submit</button>
 </template>
 <script>
 import axios from 'axios';
@@ -22,7 +27,8 @@ import axios from 'axios';
         name : 'ProdCreate',
         data() {
             return{
-                category : {}
+                category : [],
+                category_id : null
             }
         },
         mounted(){
@@ -32,11 +38,13 @@ import axios from 'axios';
                 })
         },
         methods : {
-            submit(catid){
-                axios.post('http://localhost:5000/create_product',{name : this.name , desc : this.desc , price : this.price , stock : this.stock , cat_id : catid})
+            submit(){
+                axios.post('http://localhost:5000/create_product',{name : this.name , desc : this.desc , price : this.price , stock : this.stock , cat_id : this.category_id})
                     .then(response => {
                         console.log(response.data['message'])
                     })
+                window.alert('Product addedd successfully!');
+
             }
         }
     }

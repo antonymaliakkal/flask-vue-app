@@ -19,23 +19,44 @@ export default {
     name: 'ManagerRequest',
     data() {
         return {
-            user: {}
+            user: {},
+            
         };
     },
     mounted() {
         
-    axios.get('http://localhost:5000/manager_request')
+    const token = localStorage.getItem('token')
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+
+    axios.get('http://localhost:5000/manager_request' , config)
         .then(response => {
             this.user = response.data.user;
             console.log(this.user);
+            const token = localStorage.getItem('role'); // Retrieve token from local storage
+            console.log('role : ' , token)
         })
         .catch(error => {
             console.error(error);
         });
     },
     methods : {
+
         approve(key) {
-            axios.post('http://localhost:5000/manager_request' , {key : key})
+
+            const token = localStorage.getItem('token')
+            const config = {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            };
+
+
+            axios.post('http://localhost:5000/manager_request' , {key : key} , config)
                 .then(response => {
                     console.log(response.data['message'])
                     window.location.reload();
@@ -46,4 +67,3 @@ export default {
     },
 }
 </script>
-

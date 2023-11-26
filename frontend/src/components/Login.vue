@@ -8,7 +8,7 @@
         <button @click="login">Submit</button>
     
         <br><br>
-        <router-link to="/signup">New user</router-link>
+        <!-- <router-link to="/signup">New user</router-link> -->
 
     
     </div>
@@ -33,8 +33,14 @@ export default {
       axios.post('http://localhost:5000/login', { email : this.email , password : this.password })
         .then(response => {
           console.log(response.data['message']);
-          if(response.data['login'])
-             this.$router.push('/signup')
+          localStorage.setItem('token' , response.data['access_token']);
+          localStorage.setItem('role' , response.data['role'])
+          localStorage.setItem('logged' , true)
+          
+          if(localStorage.getItem('role') == 'admin')
+             this.$router.push('/admin')
+          else if(localStorage.getItem('role') == 'user')
+            this.$router.push('/')
         });
     },
   },

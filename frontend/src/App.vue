@@ -1,7 +1,7 @@
 <template>
   <!-- <router-link to="/login">Sample</router-link> -->
   <!-- <HomePage/> -->
-  
+  <!-- <NavBar/> -->
   <div>
     <router-view></router-view>
   </div>
@@ -9,7 +9,7 @@
 
 <script>
   // import HomePage from './components/HomePage.vue'
-  
+  //  import NavBar from './views/Navbar.vue' 
 
 export default {
   name: 'App',

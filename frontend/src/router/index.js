@@ -1,10 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './../views/Sample.vue'
-import LogIn from './../components/Login.vue'
-import SignUp from './../components/SignUp.vue'
-import ManagerRequest from './../components/ManagerRequest.vue'
-import CatCreate from './../components/CatCreate.vue'
+
+import RegisterPage from './../views/Register.vue'
+import AdminPage from './../views/Admin.vue'
+
+
+import EditCat from './../components/EditCat.vue'
 import ProdCreate from './../components/ProdCreate.vue'
+import DeleteProduct from './../components/DelProd.vue'
+import DeleteCategory from './../components/DelCat.vue'
 
 
 const router = createRouter({
@@ -16,29 +20,55 @@ const router = createRouter({
       component: HomePage
     },
     {
-      path : '/login',
-      name : 'login',
-      component : LogIn
+      path : '/register',
+      component : RegisterPage 
     },
     {
-      path : '/signup',
-      name : 'signup',
-      component : SignUp
+      path : '/admin',
+      component : AdminPage,
+      meta : {
+        requiresAuth : true ,
+        roles : ['admin']
+      }
     },
     {
-      path : '/manager_request',
-      name : 'manager_request',
-      component : ManagerRequest
-    },
-    {
-      path : '/create_category',
-      component : CatCreate
+      path : '/edit_cat',
+      component : EditCat
     },
     {
       path : '/create_product',
       component : ProdCreate
     },
+    {
+      path : '/delete_product',
+      component : DeleteProduct
+    },
+    {
+      path : '/delete_category',
+      component : DeleteCategory
+    },
   ],
+});
+
+router.beforeEach((to,from,next) => {
+
+    console.log(localStorage.getItem('token'));
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+      const role = localStorage.getItem('role')
+      const allowedroles = to.meta.roles;
+
+      if(!allowedroles.includes(role)) {
+        next('/register');
+      } else {
+        next();
+      }
+
+    }
+  
+  else {
+    console.log('elsed');
+    next();
+  }
 });
 
 export default router;

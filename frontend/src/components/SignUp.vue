@@ -12,7 +12,7 @@
 
     <button @click="submitForm">Submit</button>
     <br><br>
-    <router-link to="/login">Already registered???</router-link>
+    <!-- <router-link to="/login">Already registered???</router-link> -->
 
 
 </template>
