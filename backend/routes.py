@@ -5,8 +5,6 @@ from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 
 
 
-
-
 @app.route('/signup' , methods = ['POST'])
 def signup():
     data = request.get_json()
@@ -82,7 +80,7 @@ def create_cat():
     db.session.commit()
     return jsonify({'message' : 'Category created'})
 
-@app.route('/edit_category' , methods = ['POST','GET'])
+@app.route('/edit_category' , methods = ['PATCH','GET','POST'])
 def edit_cat():
     if request.method == 'GET':
         cat = []
@@ -90,8 +88,31 @@ def edit_cat():
         for i in temp:
             cat.append({'key' : i.id , 'value' : {'name' : i.name , 'desc' : i.description}})
         return jsonify({'category':cat})
-
-
+    
+    elif request.method == 'PATCH':
+        data = request.get_json()
+        print(data)
+        print(data.get('id')['key'])
+        cat = Category.query.get(data.get('id')['key'])
+        print(cat)
+        if cat:
+            cat.name = data.get('name')
+            cat.description = data.get('desc')
+            db.session.commit()
+            return jsonify({'message' : 'Category edited'})
+        return jsonify({'message' : 'Category error'})
+    
+    elif request.method == 'POST':
+        temp = request.get_json()
+        print(temp)
+        prod = Product.query.filter_by(cat_id=temp['cat']).all()
+        print(prod)
+        for i in prod:
+            db.session.delete(i)
+        cat = Category.query.get(temp['cid'])
+        db.session.delete(cat)
+        db.session.commit()
+        return jsonify({'message' : 'Category deleted'})
 
 @app.route('/create_product' , methods = ['POST','GET'])
 def create_prod():
@@ -109,6 +130,7 @@ def create_prod():
         db.session.add(new_prod)
         db.session.commit()
         return jsonify({'message' : 'Product created'})
+    
 
 
 @app.route('/view_product',methods=['GET','POST'])
@@ -144,7 +166,8 @@ def view_cat():
 def delete_category():
     products = []
     temp = request.get_json()
-    prod = Product.query.filter_by(cat_id=temp['cid']).all()
+    print(temp)
+    prod = Product.query.filter_by(cat_id=temp['cat']).all()
     print(prod)
     for i in prod:
         db.session.delete(i)
