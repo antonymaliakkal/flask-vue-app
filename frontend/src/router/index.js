@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './../views/Sample.vue'
 
-import RegisterPage from './../views/Register.vue'
+// import RegisterPage from './../views/Register.vue'
 import AdminPage from './../views/Admin.vue'
 
 
@@ -19,10 +19,10 @@ const router = createRouter({
       name: 'home',
       component: HomePage
     },
-    {
-      path : '/register',
-      component : RegisterPage 
-    },
+    // {
+    //   path : '/register',
+    //   component : RegisterPage 
+    // },
     {
       path : '/admin',
       component : AdminPage,

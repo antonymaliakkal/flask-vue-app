@@ -3,18 +3,21 @@
   <!-- <HomePage/> -->
   <!-- <NavBar/> -->
   <div>
+    <NavBar />
+
     <router-view></router-view>
   </div>
-  </template>
+</template>
 
 <script>
-  // import HomePage from './components/HomePage.vue'
-  //  import NavBar from './views/Navbar.vue' 
-
+// import HomePage from './components/HomePage.vue'
+import NavBar from "./components/NavBar.vue";
 export default {
-  name: 'App',
-  components: {}
-}
+  name: "App",
+  components: {
+    NavBar,
+  },
+};
 </script>
 
 <style>
@@ -24,6 +27,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
