@@ -32,7 +32,7 @@ def login():
     
     access_token = create_access_token(identity={'id': user.id, 'role': user.role})   
     print(access_token)
-    return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role, 'username': user.username})
+    return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role, 'username': user.username , 'user_id' : user.id})
         
     
 @app.route('/manager_request' , methods = ['POST','GET'])
@@ -84,10 +84,12 @@ def create_cat():
 def edit_cat():
     if request.method == 'GET':
         cat = []
+        cat_new = {}
         temp = Category.query.all()
         for i in temp:
             cat.append({'key' : i.id , 'value' : {'name' : i.name , 'desc' : i.description}})
-        return jsonify({'category':cat})
+            cat_new[i.id] = {'name' : i.name , 'desc' : i.description}
+        return jsonify({'category':cat , 'category_new' : cat_new})
     
     elif request.method == 'PATCH':
         data = request.get_json()
@@ -138,10 +140,10 @@ def view_prod():
     product = {}
     temp = db.session.query(Product)
     for i in temp:
-        product[i.id] = {'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price}
+        product[i.id] = {'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price , 'stock' : i.stock}
     return jsonify({'product': product})
 
-@app.route('/filter_products',methods=['GET'])
+# @app.route('/filter_products',methods=['GET'])
     
 
 
@@ -179,16 +181,16 @@ def delete_category():
     db.session.commit()
     return jsonify({'message' : 'Category deleted'})
 
-@app.route('/cart',methods=['POST','DELETE'])
+@app.route('/cart',methods=['POST','DELETE','GET'])
 def add_cart():
     if request.method == 'POST':
         data = request.get_json()
-        new_cart = Cart(user_id = data.get('user_id') , product_id = data.get('user_id') , quantity = data.get('qty'))
+        print(data)
+        new_cart = Cart(user_id = data.get('user_id') , product_id = data.get('p_id') , quantity = data.get('qty'))
         db.session.add(new_cart)
         db.session.commit()
         return jsonify({'message' : 'added to cart'})
 
-    elif request.method == 'DELETE':
-        data = request.get_json()
-        cart = Cart.query.filter_by()    
-
+    elif request.method =='GET':
+        cart = Cart.query(Cart).join(Product).filter(Cart.product_id == Product.id)
+        return jsonify({'cart' : cart})
