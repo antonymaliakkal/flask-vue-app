@@ -32,7 +32,7 @@ def login():
     
     access_token = create_access_token(identity={'id': user.id, 'role': user.role})   
     print(access_token)
-    return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role})
+    return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role, 'username': user.username})
         
     
 @app.route('/manager_request' , methods = ['POST','GET'])
