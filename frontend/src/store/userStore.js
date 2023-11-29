@@ -8,6 +8,7 @@ const userStore = reactive({
   logOut() {
     console.log('logout');
     localStorage.setItem("token", null);
+    localStorage.setItem("id",null);
     localStorage.setItem("role", null);
     localStorage.setItem("username", null);
     localStorage.setItem("logged", false);
@@ -22,6 +23,7 @@ const userStore = reactive({
       })
       .then((response) => {
         localStorage.setItem("token", response.data["access_token"]);
+        localStorage.setItem("id" , response.data["user_id"]);
         localStorage.setItem("role", response.data["role"]);
         localStorage.setItem("username", response.data["username"]);
         localStorage.setItem("logged", true);

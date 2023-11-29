@@ -3,7 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // import RegisterPage from './../views/Register.vue'
 import AdminPage from './../views/Admin.vue'
-import HomePage from './../views/Home.vue'
+import HomePage from './../views/HomePage.vue'
+// import CartPage from './../views/Cart.vue'
 
 
 import EditCat from './../components/EditCat.vue'
@@ -20,10 +21,6 @@ const router = createRouter({
       name: 'home', 
       component: HomePage
     },
-    // {
-    //   path : '/register',
-    //   component : RegisterPage 
-    // },
     {
       path : '/admin',
       component : AdminPage,
