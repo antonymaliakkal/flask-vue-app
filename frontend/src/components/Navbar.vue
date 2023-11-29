@@ -5,10 +5,6 @@
 <script setup>
 import { userStore } from "../store/userStore";
 import LogIn from "../components/LogIn.vue";
-console.log(userStore.isLoggedIn);
-// const signout = () => {
-//   userStore.logOut();
-// };
 </script>
 
 <template>
@@ -40,7 +36,7 @@ console.log(userStore.isLoggedIn);
           </button>
         </form>
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown" v-if="userStore.isLoggedIn == 'true'">
+          <li class="nav-item dropdown" v-if="userStore.token">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -65,7 +61,7 @@ console.log(userStore.isLoggedIn);
               class="btn btn-outline-success"
               type="button"
               data-toggle="modal"
-              data-target="#exampleModalCenter"
+              data-target="#loginModal"
             >
               Login
             </button>
@@ -75,10 +71,10 @@ console.log(userStore.isLoggedIn);
     </nav>
     <div
       class="modal fade"
-      id="exampleModalCenter"
+      id="loginModal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="exampleModalCenterTitle"
+      aria-labelledby="SignIn/SignUp"
       aria-hidden="true"
     >
       <LogIn />

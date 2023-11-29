@@ -1,10 +1,30 @@
 <script setup>
+import { ref } from "vue";
+import { userStore } from "../store/userStore";
+
 // import { userStore } from "../store/userStore";
+let isLogin = ref(true);
+let email = ref("");
+let password = ref("");
+let role = ref("");
+
+const swapLogin = () => {
+  isLogin.value = !isLogin.value;
+};
+
+const signUp = async () => {
+  const response = await userStore.signUp(email, password, role);
+  console.log(response);
+};
+
+const logIn = async () => {
+  await userStore.logIn(email.value, password.value);
+};
 </script>
 <template>
   <!-- <div>
     <h1>LOGIN</h1>
-    <input v-model="this.email" type="text" placeholder="Email" />
+    <input v-model="email" type="text" placeholder="Email" />
     <br /><br />
     <input v-model="password" type="text" placeholder="Password" />
     <br />
@@ -16,7 +36,8 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="SignIn/SignUp">Modal title</h5>
+        <h5 class="modal-title" id="SignIn/SignUp" v-if="isLogin">Sign In</h5>
+        <h5 class="modal-title" id="SignIn/SignUp" v-else>Sign Up</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -28,8 +49,9 @@
             <input
               type="email"
               class="form-control"
-              id="exampleDropdownFormEmail1"
+              id="email"
               placeholder="email@example.com"
+              v-model="email"
             />
           </div>
           <div class="form-group">
@@ -37,21 +59,40 @@
             <input
               type="password"
               class="form-control"
-              id="exampleDropdownFormPassword1"
+              id="password"
               placeholder="Password"
+              v-model="password"
             />
           </div>
-          <div class="form-check">
+          <div class="form-check" v-if="isLogin">
             <input type="checkbox" class="form-check-input" id="dropdownCheck" />
             <label class="form-check-label" for="dropdownCheck"> Remember me </label>
           </div>
         </form>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">New around here? Sign up</a>
-        <a class="dropdown-item" href="#">Forgot password?</a>
+        <p class="" @click="swapLogin()" v-if="isLogin">New around here? Sign up</p>
+        <p class="" @click="swapLogin()" v-else>Already have an account? Sign In</p>
+        <!-- <a class="dropdown-item" href="#">Forgot password?</a> -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">SignIn</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          v-if="isLogin"
+          @click="logIn()"
+        >
+          Sign In
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          v-else
+          @click="signUp()"
+        >
+          Sign Up
+        </button>
       </div>
     </div>
   </div>

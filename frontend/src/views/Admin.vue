@@ -1,58 +1,25 @@
+/* eslint-disable */
 <style>
 @import "../styles/admin.css";
 </style>
-
+<script setup>
+import Categories from "../components/Admin/Categories.vue";
+import ManagerRequest from "../components/Admin/ManagerRequest.vue";
+import { adminStore } from "../store/adminStore";
+</script>
 <template>
-  <div>
-    <h1>Welcome Admin!</h1>
-
-    <div>
-      <button @click="showManagerRequest">Approve Managers</button>
-      <br /><br />
-      <button @click="showCreateCat">Create Category</button>
-      <br /><br />
-      <button @click="showEditCat">Edit Category</button>
+  <div class="d-flex">
+    <div class="d-flex flex-column px-4 py-3" style="gap: 10px">
+      <button type="button" @click="adminStore.path = 1" class="btn btn-primary">
+        Categories
+      </button>
+      <button type="button" @click="adminStore.path = 2" class="btn btn-success">
+        Approvals
+      </button>
     </div>
-
-    <div v-if="currentComponent === 'ManagerRequest'">
-      <ManagerRequest />
-    </div>
-    <div v-else-if="currentComponent === 'CreateCat'">
-      <CreateCat />
-    </div>
-    <div v-else-if="currentComponent === 'EditCat'">
-      <EditCat />
+    <div class="content w-100 p-3">
+      <Categories v-if="adminStore.path == 1" />
+      <ManagerRequest v-if="adminStore.path == 2" />
     </div>
   </div>
 </template>
-
-<script>
-import ManagerRequest from "./../components/ManagerRequest.vue";
-import CreateCat from "./../components/CatCreate.vue";
-import EditCat from "./../components/EditCat.vue";
-
-export default {
-  name: "AdminPage",
-  components: {
-    ManagerRequest,
-    CreateCat,
-    EditCat,
-  },
-  data() {
-    return {
-      currentComponent: null,
-    };
-  },
-  methods: {
-    showManagerRequest() {
-      this.currentComponent = "ManagerRequest";
-    },
-    showCreateCat() {
-      this.currentComponent = "CreateCat";
-    },
-    showEditCat() {
-      this.currentComponent = "EditCat";
-    },
-  },
-};
-</script>

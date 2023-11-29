@@ -1,14 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './../views/Sample.vue'
-
-// import RegisterPage from './../views/Register.vue'
 import AdminPage from './../views/Admin.vue'
-
-
-import EditCat from './../components/EditCat.vue'
-import ProdCreate from './../components/ProdCreate.vue'
-import DeleteProduct from './../components/DelProd.vue'
-import DeleteCategory from './../components/DelCat.vue'
 
 
 const router = createRouter({
@@ -19,10 +11,6 @@ const router = createRouter({
       name: 'home',
       component: HomePage
     },
-    // {
-    //   path : '/register',
-    //   component : RegisterPage 
-    // },
     {
       path : '/admin',
       component : AdminPage,
@@ -30,22 +18,6 @@ const router = createRouter({
         requiresAuth : true ,
         roles : ['admin']
       }
-    },
-    {
-      path : '/edit_cat',
-      component : EditCat
-    },
-    {
-      path : '/create_product',
-      component : ProdCreate
-    },
-    {
-      path : '/delete_product',
-      component : DeleteProduct
-    },
-    {
-      path : '/delete_category',
-      component : DeleteCategory
     },
   ],
 });
