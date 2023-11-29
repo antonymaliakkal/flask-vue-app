@@ -19,7 +19,7 @@
     import SignUp from '@/components/SignUp.vue'
 
     export default{
-        name : 'HomePage',
+        name : 'HomePageOld',
         components : {
             LogIn,
             SignUp

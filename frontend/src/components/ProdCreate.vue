@@ -29,7 +29,7 @@ import axios from 'axios';
             return{
                 category : [],
                 category_id : null
-            }
+            } 
         },
         mounted(){
             axios.get('http://localhost:5000/create_product')

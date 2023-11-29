@@ -3,7 +3,7 @@
         <h1>MANAGER REQUEST LIST</h1>
         <ul>
             <li v-for="(value,key) in user" :key="key">
-                {{ key }}: {{ value }}
+                {{ value }} 
                 <button @click="approve(key)">Approve</button>
 
             </li>
@@ -19,7 +19,7 @@ export default {
     name: 'ManagerRequest',
     data() {
         return {
-            user: {},
+            user: {}
             
         };
     },
@@ -59,7 +59,7 @@ export default {
             axios.post('http://localhost:5000/manager_request' , {key : key} , config)
                 .then(response => {
                     console.log(response.data['message'])
-                    window.location.reload();
+                    // window.location.reload();
                 })
         
             // window.location.reload();

@@ -133,14 +133,16 @@ def create_prod():
     
 
 
-@app.route('/view_product',methods=['GET','POST'])
+@app.route('/view_product',methods=['GET'])
 def view_prod():
     product = {}
     temp = db.session.query(Product)
     for i in temp:
-        product[i.id] = i.name
-
+        product[i.id] = {'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price}
     return jsonify({'product': product})
+
+@app.route('/filter_products',methods=['GET'])
+    
 
 
 @app.route('/delete_product',methods=['POST','GET'])
@@ -167,11 +169,26 @@ def delete_category():
     products = []
     temp = request.get_json()
     print(temp)
-    prod = Product.query.filter_by(cat_id=temp['cat']).all()
+    print(temp.get('cat')['key'])
+    prod = Product.query.filter_by(cat_id=temp.get('cat')['key']).all()
     print(prod)
     for i in prod:
         db.session.delete(i)
-    cat = Category.query.get(temp['cid'])
+    cat = Category.query.get(temp.get('cat')['key'])
     db.session.delete(cat)
     db.session.commit()
     return jsonify({'message' : 'Category deleted'})
+
+@app.route('/cart',methods=['POST','DELETE'])
+def add_cart():
+    if request.method == 'POST':
+        data = request.get_json()
+        new_cart = Cart(user_id = data.get('user_id') , product_id = data.get('user_id') , quantity = data.get('qty'))
+        db.session.add(new_cart)
+        db.session.commit()
+        return jsonify({'message' : 'added to cart'})
+
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        cart = Cart.query.filter_by()    
+
