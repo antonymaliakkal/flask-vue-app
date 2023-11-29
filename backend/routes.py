@@ -3,7 +3,8 @@ from app import app,db
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 
-
+def to_dict():
+    return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 @app.route('/signup' , methods = ['POST'])
 def signup():
@@ -94,14 +95,15 @@ def edit_cat():
     elif request.method == 'PATCH':
         data = request.get_json()
         print(data)
-        print(data.get('id')['key'])
-        cat = Category.query.get(data.get('id')['key'])
+        print(data.get('id'))
+        cat = Category.query.get(data.get('id'))
         print(cat)
         if cat:
             cat.name = data.get('name')
             cat.description = data.get('desc')
             db.session.commit()
-            return jsonify({'message' : 'Category edited'})
+            data = {'key': cat.id, 'value':{'name': cat.name, 'desc': cat.description}}
+            return {'message' : 'Category edited', 'data': data}
         return jsonify({'message' : 'Category error'})
     
     elif request.method == 'POST':
@@ -171,8 +173,7 @@ def delete_category():
     products = []
     temp = request.get_json()
     print(temp)
-    print(temp.get('cat')['key'])
-    prod = Product.query.filter_by(cat_id=temp.get('cat')['key']).all()
+    prod = Product.query.filter_by(cat_id=temp['id']).all()
     print(prod)
     for i in prod:
         db.session.delete(i)

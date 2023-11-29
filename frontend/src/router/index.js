@@ -7,12 +7,6 @@ import HomePage from './../views/HomePage.vue'
 // import CartPage from './../views/Cart.vue'
 
 
-import EditCat from './../components/EditCat.vue'
-import ProdCreate from './../components/ProdCreate.vue'
-import DeleteProduct from './../components/DelProd.vue'
-import DeleteCategory from './../components/DelCat.vue'
-
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -28,22 +22,6 @@ const router = createRouter({
         requiresAuth : true ,
         roles : ['admin']
       }
-    },
-    {
-      path : '/edit_cat',
-      component : EditCat
-    },
-    {
-      path : '/create_product',
-      component : ProdCreate
-    },
-    {
-      path : '/delete_product',
-      component : DeleteProduct
-    },
-    {
-      path : '/delete_category',
-      component : DeleteCategory
     },
   ],
 });
