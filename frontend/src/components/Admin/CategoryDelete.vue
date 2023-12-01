@@ -1,3 +1,6 @@
+<script setup>
+import { categoryStore } from "../../store/miscStore";
+</script>
 <template>
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -19,7 +22,7 @@
           type="button"
           class="btn btn-danger"
           data-dismiss="modal"
-          @click="categoryStore.edit()"
+          @click="categoryStore.delete()"
         >
           Yes
         </button>

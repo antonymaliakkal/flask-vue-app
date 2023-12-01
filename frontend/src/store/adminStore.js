@@ -1,3 +1,4 @@
+import axios from "axios";
 import { reactive } from "vue";
 
 // path:
@@ -9,11 +10,43 @@ import { reactive } from "vue";
 //   edit = 2
 //   delete = 2
 
+const token = localStorage.getItem('token')
+const config = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
+
 const adminStore = reactive({
   path: 1,
   dialogueType: 1,
-  catName: '',
-  catDesc: ''
+  managerRequests: {},
+  async getManagerRequests() {
+    axios
+      .get("http://localhost:5000/manager_request", config)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data);
+          this.managerRequests = response.data.user
+        } else {
+          alert('An error occured')
+        }
+      });
+  },
+  async approveManagerRequest(key) {
+    axios.post('http://localhost:5000/manager_request', { key: key }, config)
+      .then(response => {
+        console.log(response.data['message'])
+        delete this.managerRequests[key]
+      })
+  },
+  async rejectManagerRequest(key) {
+    axios.put('http://localhost:5000/manager_request', { key: key }, config)
+      .then(response => {
+        console.log(response.data['message'])
+        delete this.managerRequests[key]
+      })
+  }
 })
 
-export {adminStore}
+export { adminStore }

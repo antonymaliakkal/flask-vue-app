@@ -54,6 +54,7 @@ import { categoryStore } from "../../store/miscStore";
           class="btn btn-success"
           data-dismiss="modal"
           v-if="adminStore.dialogueType == 1"
+          @click="categoryStore.add()"
         >
           Add
         </button>

@@ -36,7 +36,7 @@ def login():
     return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role, 'username': user.username , 'user_id' : user.id})
         
     
-@app.route('/manager_request' , methods = ['POST','GET'])
+@app.route('/manager_request' , methods = ['POST','GET', 'PUT'])
 @jwt_required()
 def manager_request():
 
@@ -73,13 +73,29 @@ def manager_request():
         db.session.commit()
         return jsonify({'message' : 'changed role'})
 
+    elif request.method == 'PUT':
+
+        current_user = get_jwt_identity()
+        print(current_user)
+
+        if current_user['role'] != 'admin': 
+            print(current_user['id'])
+            return jsonify({'message' : 'only admin access'})
+
+        data = request.get_json()
+        Manager_request.query.filter(Manager_request.user_id == data['key']).delete()
+        User.query.filter(User.id == data['key']).delete()
+        db.session.commit()
+        return jsonify({'message' : 'request rejected'})
+
 @app.route('/create_category',methods = ['POST','GET'])
 def create_cat():
     data = request.get_json()
     new_cat = Category(name = data.get('name') , description = data.get('desc') )
     db.session.add(new_cat)
     db.session.commit()
-    return jsonify({'message' : 'Category created'})
+    data = {'key': new_cat.id, 'value':{'name': new_cat.name, 'desc':new_cat.description}}
+    return jsonify({'message' : 'Category created', 'data':data})
 
 @app.route('/edit_category' , methods = ['PATCH','GET','POST'])
 def edit_cat():
@@ -177,7 +193,7 @@ def delete_category():
     print(prod)
     for i in prod:
         db.session.delete(i)
-    cat = Category.query.get(temp.get('cat')['key'])
+    cat = Category.query.get(temp['id'])
     db.session.delete(cat)
     db.session.commit()
     return jsonify({'message' : 'Category deleted'})

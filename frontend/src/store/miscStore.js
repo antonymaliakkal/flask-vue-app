@@ -36,8 +36,19 @@ const categoryStore = reactive({
       .post("http://localhost:5000/delete_category", { id: this.catId })
       .then((response) => {
         if (response.status == 200) {
-          this.categories.pop(this.catPos)
+          this.categories.splice(this.catPos, 1)
           this.catId = this.catPos = ''
+        } else {
+          alert('An error occured')
+        }
+      });
+  },
+  async add(){
+    axios
+      .post("http://localhost:5000/create_category", { name: this.catName, desc: this.catDesc })
+      .then((response) => {
+        if (response.status == 200) {
+          this.categories.push(response.data.data)
         } else {
           alert('An error occured')
         }

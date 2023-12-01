@@ -22,36 +22,28 @@ const deleteCat = (id, index) => {
   categoryStore.catId = id;
   categoryStore.catPos = index;
 };
-// export default {
-//   name: "EditCat",
-//   data() {
-//     return {
-//       isModalVisible: false,
-//       editedCategory: { id: null, name: "", desc: "" },
-//     };
-//   },
-//   mounted() {
 
-//   },
-//   methods: {
-//     editCategory(category) {
-//       this.isModalVisible = true;
-//       console.log(category);
-//       this.editedCategory.id = category;
-//       this.editedCategory.name = category.value.name;
-//       this.editedCategory.desc = category.value.desc;
-//     },
-//     closeModal() {
-//       this.isModalVisible = false;
-//     },
-//   },
-// };
+const addCategory = () => {
+  adminStore.dialogueType = 1;
+  categoryStore.catName = "";
+  categoryStore.catDesc = "";
+};
 </script>
 
 <template>
   <v-fragment>
     <div>
-      <h3 class="text-left">Categories</h3>
+      <div class="category-head d-flex justify-content-between align-items-center py-2">
+        <h3 class="text-left mb-0">Categories</h3>
+        <button
+          class="btn btn-success"
+          data-toggle="modal"
+          data-target="#adminModal"
+          @click="addCategory()"
+        >
+          Add category
+        </button>
+      </div>
       <table class="table">
         <thead class="thead-dark">
           <tr>
