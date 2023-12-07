@@ -4,7 +4,7 @@
 
 <script setup>
 import { userStore } from "../store/userStore";
-import LogIn from "../components/LogIn.vue";
+import LogIn from "./Login.vue";
 </script>
 
 <template>

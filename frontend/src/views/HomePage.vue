@@ -31,11 +31,15 @@ function viewcat(key) {
 }
 
 function addcart(key){
-    if(!userStore.isLoggedIn){
+    console.log(userStore.token)
+    if(!userStore.token){
         console.log('not logged in')
     }
     else {
-        let data = {'p_id' : key , 'quantity' : quantity , 'id' : userStore.id}
+        let id = localStorage.getItem('id')
+        console.log(quantity.value)
+        let data = {'p_id' : key , 'quantity' : quantity.value , 'id' : id}
+        console.log(data)
         cartStore.add_cart(data)
     }
 }

@@ -3,7 +3,7 @@ from app import app,db
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 
-def to_dict():
+def to_dict(self):
     return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 @app.route('/signup' , methods = ['POST'])
@@ -183,15 +183,21 @@ def delete_category():
     return jsonify({'message' : 'Category deleted'})
 
 @app.route('/cart',methods=['POST','DELETE','GET'])
+@jwt_required
 def add_cart():
     if request.method == 'POST':
+        current_user = get_jwt_identity()
+        print(current_user['id'])    
         data = request.get_json()
-        print(data)
-        new_cart = Cart(user_id = data.get('user_id') , product_id = data.get('p_id') , quantity = data.get('qty'))
+        print(data,'hiii')
+        new_cart = Cart(user_id = data.get('id') , product_id = data.get('p_id') , quantity = data.get('quantity'))
         db.session.add(new_cart)
         db.session.commit()
         return jsonify({'message' : 'added to cart'})
 
     elif request.method =='GET':
+        current_user = get_jwt_identity()
         cart = Cart.query(Cart).join(Product).filter(Cart.product_id == Product.id)
-        return jsonify({'cart' : cart})
+        cart_new = cart.filter(Cart.user_id == current_user['id'])
+        print(cart_new)
+        return jsonify({'cart' : cart_new})

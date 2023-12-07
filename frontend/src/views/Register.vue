@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import LogIn from "../components/LogIn.vue";
+import LogIn from "./Login.vue";
 import SignUp from "./../components/SignUp.vue";
 
 export default {

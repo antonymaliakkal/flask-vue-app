@@ -5,20 +5,36 @@ import { userStore } from "./userStore";
 const cartStore = reactive({
     cart : {},
     async get(){
-        await axios.get('http://localhost:5000/view_product')
+
+        const token = userStore.token
+        const config = {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        };
+
+        await axios.get('http://localhost:5000/view_product' , config)
             .then(response => {
-                console.log('fetched cart',response)
+                console.log('fetched cart')
+                 
+
             })
     },
     async add_cart(data){
-        if(userStore.isLoggedIn) {
-            await axios.post('http://localhost:5000/cart' , data)
-            .then(response => {
-                console.log('added to cart',response)
-            })
-        }
+        console.log('entered')
+        const token = userStore.token
+        const config = {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        };
+        await axios.post('http://localhost:5000/cart' , data , config)
+        .then(response => {
+            console.log('added to cart',response)
+        })
+    
 
     }
 })
-
+    
 export { cartStore }
