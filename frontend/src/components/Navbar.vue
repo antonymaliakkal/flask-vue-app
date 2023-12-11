@@ -36,7 +36,17 @@ import LogIn from "../components/LogIn.vue";
           </button>
         </form>
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown" v-if="userStore.token">
+          <li class="nav-item dropdown" v-if="!userStore.token">
+            <button
+              class="btn btn-outline-success"
+              type="button"
+              data-toggle="modal"
+              data-target="#loginModal"
+            >
+              Login
+            </button>
+          </li>
+          <li class="nav-item dropdown" v-else>
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -55,16 +65,6 @@ import LogIn from "../components/LogIn.vue";
             >
               <p class="dropdown-item" @click="userStore.logOut()">LogOut</p>
             </div>
-          </li>
-          <li class="nav-item dropdown" v-else>
-            <button
-              class="btn btn-outline-success"
-              type="button"
-              data-toggle="modal"
-              data-target="#loginModal"
-            >
-              Login
-            </button>
           </li>
         </ul>
       </div>

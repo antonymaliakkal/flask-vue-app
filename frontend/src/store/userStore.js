@@ -3,7 +3,7 @@ import axios from 'axios';
 import { reactive } from 'vue'
 
 const userStore = reactive({
-  token: localStorage.getItem('token') || '',
+  token: localStorage.getItem('token') == 'null' ? '' : localStorage.getItem('token'),
   username: localStorage.getItem('username'),
   logOut() {
     console.log('logout');

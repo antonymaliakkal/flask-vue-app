@@ -13,26 +13,17 @@ const swapLogin = () => {
 };
 
 const signUp = async () => {
-  const response = await userStore.signUp(email, password, role);
+  const response = await userStore.signUp(email.value, password.value, role.value);
+  email.value = password.value = role.value = "";
   console.log(response);
 };
 
 const logIn = async () => {
   await userStore.logIn(email.value, password.value);
+  email.value = password.value = "";
 };
 </script>
 <template>
-  <!-- <div>
-    <h1>LOGIN</h1>
-    <input v-model="email" type="text" placeholder="Email" />
-    <br /><br />
-    <input v-model="password" type="text" placeholder="Password" />
-    <br />
-    <button @click="userStore.logIn(email, password)">Submit</button>
-
-    <br /><br />
-    <router-link to="/signup">New user</router-link>
-  </div> -->
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -63,6 +54,19 @@ const logIn = async () => {
               placeholder="Password"
               v-model="password"
             />
+          </div>
+          <div class="form-group" v-if="!isLogin">
+            <label for="manager-cb">Manager</label>
+            <input
+              type="radio"
+              name="role"
+              value="manager"
+              id="manager-cb"
+              v-model="role"
+            />
+            <br />
+            <label for="user-cb">User</label>
+            <input type="radio" name="role" value="role" id="user-cb" v-model="role" />
           </div>
           <div class="form-check" v-if="isLogin">
             <input type="checkbox" class="form-check-input" id="dropdownCheck" />

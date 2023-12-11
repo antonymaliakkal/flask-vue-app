@@ -1,5 +1,6 @@
 import axios from "axios";
 import { reactive } from "vue";
+// import { userStore } from "./userStore";
 
 // path:
 //  category = 1
@@ -10,20 +11,16 @@ import { reactive } from "vue";
 //   edit = 2
 //   delete = 2
 
-const token = localStorage.getItem('token')
-const config = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
-
 const adminStore = reactive({
   path: 1,
   dialogueType: 1,
   managerRequests: {},
+  config: {headers: {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  }}, 
   async getManagerRequests() {
     axios
-      .get("http://localhost:5000/manager_request", config)
+      .get("http://localhost:5000/manager_request", this.config)
       .then((response) => {
         if (response.status == 200) {
           console.log(response.data);
@@ -34,14 +31,14 @@ const adminStore = reactive({
       });
   },
   async approveManagerRequest(key) {
-    axios.post('http://localhost:5000/manager_request', { key: key }, config)
+    axios.post('http://localhost:5000/manager_request', { key: key }, this.config)
       .then(response => {
         console.log(response.data['message'])
         delete this.managerRequests[key]
       })
   },
   async rejectManagerRequest(key) {
-    axios.put('http://localhost:5000/manager_request', { key: key }, config)
+    axios.put('http://localhost:5000/manager_request', { key: key }, this.config)
       .then(response => {
         console.log(response.data['message'])
         delete this.managerRequests[key]
