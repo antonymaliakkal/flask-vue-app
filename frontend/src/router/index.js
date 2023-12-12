@@ -5,7 +5,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminPage from './../views/Admin.vue'
 import HomePage from './../views/HomePage.vue'
 // import CartPage from './../views/Cart.vue'
-
+import ProdCreate from './../components/ProdCreate.vue'
+import Cart from './../views/Cart.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,6 +24,14 @@ const router = createRouter({
         roles : ['admin']
       }
     },
+    {
+      path : '/product',
+      component : ProdCreate 
+    },
+    {
+      path : '/cart',
+      component : Cart
+    } 
   ],
 });
 
@@ -34,7 +43,7 @@ router.beforeEach((to,from,next) => {
       const allowedroles = to.meta.roles;
 
       if(!allowedroles.includes(role)) {
-        next('/register');
+        next('/');
       } else {
         next();
       }

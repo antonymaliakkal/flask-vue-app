@@ -1,10 +1,21 @@
 from flask import request,jsonify
-from app import app,db
+from app import app,db,redis_store
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 
 def to_dict():
     return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+def fetch_redis(x):
+    data = redis_store.get(x)
+    if data is not None:
+        data = data.decode('utf-8')
+    else:
+        data = "Key doesn't exist in Redis"
+    return data
+
+
 
 @app.route('/signup' , methods = ['POST'])
 def signup():
@@ -158,7 +169,7 @@ def view_prod():
     product = {}
     temp = db.session.query(Product)
     for i in temp:
-        product[i.id] = {'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price , 'stock' : i.stock}
+        product[i.id] = {'id' : i.id , 'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price , 'stock' : i.stock}
     return jsonify({'product': product})
 
 # @app.route('/filter_products',methods=['GET'])
@@ -199,8 +210,11 @@ def delete_category():
     return jsonify({'message' : 'Category deleted'})
 
 @app.route('/cart',methods=['POST','DELETE','GET'])
+@jwt_required()
 def add_cart():
     if request.method == 'POST':
+        current_user = get_jwt_identity()
+        print(current_user)
         data = request.get_json()
         print(data)
         new_cart = Cart(user_id = data.get('user_id') , product_id = data.get('p_id') , quantity = data.get('qty'))
@@ -209,5 +223,18 @@ def add_cart():
         return jsonify({'message' : 'added to cart'})
 
     elif request.method =='GET':
-        cart = Cart.query(Cart).join(Product).filter(Cart.product_id == Product.id)
-        return jsonify({'cart' : cart})
+        print('before')
+        # redis_store.set('greeting', 'Hello, Redis!')
+        greet = fetch_redis('greet')
+        print('REDIS   :       :' , greet)
+        current_user = get_jwt_identity()
+        current_user = current_user['id']
+        print('after')
+        print('CURRENT USER ID  : ',current_user)
+        user = db.session.query(Cart,Product).join(Product , Cart.product_id == Product.id).filter(Cart.user_id == current_user).all()
+        print(user)
+        temp = {}
+        for cart,product in user:
+            temp[cart.id] = {'quantity' : cart.quantity , 'name' : product.name , 'price' : product.price}
+        print(temp)
+        return jsonify({'cart' : temp})    

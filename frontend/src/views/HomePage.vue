@@ -31,81 +31,52 @@ function viewcat(key) {
 }
 
 function addcart(key){
-    if(!userStore.isLoggedIn){
-        console.log('not logged in')
+    if(userStore.token){
+        let data = {'p_id' : key , 'qty' : quantity.value , 'user_id' : localStorage.getItem('id')}
+        console.log(data)
+        cartStore.add_cart(data)
+
     }
     else {
-        let data = {'p_id' : key , 'quantity' : quantity , 'id' : userStore.id}
-        cartStore.add_cart(data)
+        console.log(userStore.isLoggedIn)
+        console.log('not logged in!!!')
     }
 }
 
 </script>
 <template>
     <h1>HOME PAGE</h1>
-    <div class="main">
-        <div class="categories">
+    <div class="main row">
+        <div class="col card">
             <!-- Category list -->
-            <ul>
-                <li @click="viewcat('all')">ALL</li>
-                <li v-for="(value, key) in categoryStore.cat_new" :key="key" @click="viewcat(key)">
+            <ul class="list-group list-group-flush">
+                <li class="card-header" @click="viewcat('all')">ALL</li>
+                <li class="list-group-item" v-for="(value, key) in categoryStore.cat_new" :key="key" @click="viewcat(key)">
                     {{ value.name }}
                 </li>
             </ul>
         </div>
-        
-        <div class="products">
-            <!-- Product tabs -->
-            <div class="tab-container">
-                <div v-for="(value, key) in products.value" :key="key" class="tab">
-                    <b>{{ value.name }}</b>
-                    <br>
-                    PRICE: {{ value.price }}
-                    <br>
-                    {{ value.desc }}
-                    <br>
-                    <input v-model="quantity" type="number" min="0" placeholder="Quantity">
-                    <br>
-                    <button @click="addcart(key)" >ADD TO CART</button>
+        <div class="col-9 products">
+            <div class="card" v-for="(value, key) in products.value" :key="key">
+                <div class="card-body">
+                    <h5 class="card-title">{{ value.name }}</h5>
+                    <p class="card-text">{{ value.desc }}</p>
+                    <input class="card-text" v-model="quantity" type="number" min="0" placeholder="Quantity">
+                    <a @click="addcart(value.id)" class="btn btn-primary">Go somewhere</a>
                 </div>
             </div>
         </div>
+
     </div>
+
+    <div class="card">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+    </div>
+
+
 </template>
-
-<style>
-.main {
-    display: flex;
-}
-
-.categories {
-    flex: 1;
-    /* Categories take up remaining space */
-    overflow-y: auto;
-    /* Enable vertical scrolling if needed */
-    max-height: 100vh;
-    /* Limit maximum height */
-}
-
-.products {
-    flex: 3;
-    /* Products take up 3/4 of the space */
-    overflow-x: auto;
-    /* Enable horizontal scrolling */
-}
-
-.tab-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    /* Adjust gap between tabs */
-}
-
-.tab {
-    width: calc(25% - 20px);
-    /* Each tab takes up 25% width with 20px gap */
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 20px;
-    /* Adjust margin between tabs */
-}</style>

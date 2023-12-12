@@ -5,6 +5,10 @@
 <script setup>
 import { userStore } from "../store/userStore";
 import LogIn from "../components/LogIn.vue";
+
+
+let product = ref("")
+
 </script>
 
 <template>
@@ -30,6 +34,7 @@ import LogIn from "../components/LogIn.vue";
             type="search"
             placeholder="Search"
             aria-label="Search"
+            v-model="product"
           />
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
             Search
