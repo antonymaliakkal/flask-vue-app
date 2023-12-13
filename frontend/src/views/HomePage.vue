@@ -1,7 +1,7 @@
 <script setup>
 import { productStore } from "../store/productStore.js";
 import { categoryStore } from "../store/miscStore.js";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { userStore } from "@/store/userStore";
 import { cartStore } from "@/store/cartStore";
 
@@ -136,7 +136,7 @@ function addcart(key, name) {
                 v-model="quantity[value.id]"
                 type="number"
                 min="0"
-                max="value.stock"
+                :max="value.stock"
                 placeholder="Quantity"
               />
             </div>
