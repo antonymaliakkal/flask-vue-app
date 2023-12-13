@@ -22,7 +22,16 @@ const cartStore = reactive({
                 console.log('added to cart',response)
             })
         }
-
+    },
+    async delete_cart(data){
+        console.log('delete cart function')
+        console.log(data)
+        if(userStore.token) {
+            await axios.post('http://localhost:5000/cart_delete' , {'id' : data} , this.config)
+            .then(response => {
+                console.log(response.data['message'])
+            })
+        }
     }
 })
 

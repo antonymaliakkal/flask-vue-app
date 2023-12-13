@@ -2,10 +2,7 @@ from flask import request,jsonify
 from app import app,db,redis_store
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
-
-def to_dict():
-    return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
+import json
 
 def fetch_redis(x):
     data = redis_store.get(x)
@@ -224,17 +221,65 @@ def add_cart():
 
     elif request.method =='GET':
         print('before')
-        # redis_store.set('greeting', 'Hello, Redis!')
-        greet = fetch_redis('greet')
-        print('REDIS   :       :' , greet)
         current_user = get_jwt_identity()
         current_user = current_user['id']
-        print('after')
+        # print('after')
         print('CURRENT USER ID  : ',current_user)
         user = db.session.query(Cart,Product).join(Product , Cart.product_id == Product.id).filter(Cart.user_id == current_user).all()
-        print(user)
+        # print(user)
         temp = {}
         for cart,product in user:
-            temp[cart.id] = {'quantity' : cart.quantity , 'name' : product.name , 'price' : product.price}
-        print(temp)
+            temp[cart.id] = {'id' : cart.id ,'quantity' : cart.quantity , 'name' : product.name , 'price' : product.price}
+        # print(temp)
         return jsonify({'cart' : temp})    
+
+    # elif request.method =='DELETE':
+    #     print('cart delete')
+    #     current_user = get_jwt_identity()
+    #     print(current_user)
+
+    #     data = request.get_json()
+    #     cart = Cart.query.get(data['id'])
+    #     db.session.delete(cart)
+    #     db.session.commit()
+    #     return jsonify({'message' : 'Cart Item deleted'})
+
+@app.route('/cart_delete' , methods = ['POST','DELETE'])
+def cart_deleted():
+        print('cart delete')
+        data = request.get_json()
+        cart = Cart.query.get(data['id'])
+        db.session.delete(cart)
+        db.session.commit()
+        return jsonify({'message' : 'Cart Item deleted'})
+
+@app.route('/cache',methods=['POST','GET'])
+def caching():
+    
+    
+    data = request.get_json()
+    print(data)
+    search = data['search']
+    print(search)
+    data = redis_store.get(search)
+    print('redis data : ',data)
+    if data is not None:
+        data = json.loads(data)
+        return jsonify({'product' : data , 'message' : 'fetched from redis'})
+    else:
+        prod = Product.query.filter_by(name = search).all()
+        print(prod)
+        if prod == []:
+            return jsonify({'product' : {} , 'message' : 'no product'})
+        else:
+            temp = {}
+            for i in prod:
+                x = {}
+                temp[i.id] = { 'id' : i.id , 'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price , 'stock' : i.stock }
+                x[i.id] = temp[i.id]
+                x = json.dumps(x)
+                print(x)
+                redis_store.set(i.name, x)
+                redis_store.expire(i.name,3600)
+                print('ADDED TO REDIS' , i.name)
+            return jsonify({'product' : temp , 'message':'fetched from database'})
