@@ -8,7 +8,6 @@ from models import User, Orders, OrderProducts, Product
 from datetime import datetime, timedelta, date
 from flask_mail import Mail,Message
 import calendar 
-from io import BytesIO
 
 def celery_init_app(app: Flask) -> Celery:
     class FlaskTask(Task):
