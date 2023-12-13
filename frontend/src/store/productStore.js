@@ -16,6 +16,7 @@ const productStore = reactive({
   prodPos: '',
   prodObj: {...initProdObj},
   search : '',
+  selectedCat: 'all',
   async get() {
     console.log('product store')
     await axios.get('http://localhost:5000/view_product')
@@ -66,7 +67,7 @@ const productStore = reactive({
           console.log(this.products)
           console.log(response.data['message']);
       })    
-  }
+  },
 
 })
 export { productStore }

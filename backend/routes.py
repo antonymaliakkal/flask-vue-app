@@ -43,7 +43,7 @@ def login():
     # access_token = create_access_token(identity=user.id, additional_claims={'role': user.role})
     user.last_visited = func.now()
     db.session.commit()
-    access_token = create_access_token(identity={'id': user.id, 'role': user.role})   
+    access_token = create_access_token(identity={'id': user.id, 'role': user.role},expires_delta=False)   
     print(access_token)
     return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role, 'username': user.username , 'user_id' : user.id})
         
@@ -306,7 +306,7 @@ def caching():
         data = json.loads(data)
         return jsonify({'product' : data , 'message' : 'fetched from redis'})
     else:
-        prod = Product.query.filter_by(name = search).all()
+        prod = Product.query.filter(Product.name.ilike('%{}%'.format(search))).all()
         print(prod)
         if prod == []:
             return jsonify({'product' : {} , 'message' : 'no product'})
@@ -342,7 +342,7 @@ def checkout():
     print(datetime.now())
 
     #creating a new order
-    new_order = Orders(order_user = current_user , data = datetime.now())
+    new_order = Orders(order_user = current_user , date = datetime.now())
     db.session.add(new_order)
     db.session.commit()
 
@@ -361,7 +361,7 @@ def checkout():
 
         #add products to OrderProducts table
         print('adding product to orders')
-        new_product = OrderProducts(order_id = order , produc_id = i.product_id , quantity = i.quantity)
+        new_product = OrderProducts(order_id = order , product_id = i.product_id , quantity = i.quantity)
         db.session.add(new_product)
         db.session.commit() 
         print('added product to orders')

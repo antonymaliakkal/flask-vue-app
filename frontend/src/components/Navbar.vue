@@ -54,7 +54,7 @@ function exportcsv() {
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="form-inline my-2 my-lg-0">
+        <div class="form-inline my-2 my-lg-0">
           <input
             class="form-control mr-sm-2"
             type="search"
@@ -69,7 +69,7 @@ function exportcsv() {
           >
             Search
           </button>
-        </form>
+        </div>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown" v-if="!userStore.token">
             <button
