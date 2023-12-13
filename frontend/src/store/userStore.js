@@ -5,7 +5,7 @@ import { reactive } from 'vue'
 const userStore = reactive({
   token: localStorage.getItem('token') == 'null' ? '' : localStorage.getItem('token'),
   username: localStorage.getItem('username'),
-  role: localStorage.getItem('username'),
+  role: localStorage.getItem('role'),
   logOut() {
     console.log('logout');
     localStorage.setItem("token", null);

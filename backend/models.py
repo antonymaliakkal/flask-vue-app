@@ -47,7 +47,7 @@ class Cart(db.Model):
 class Orders(db.Model):
     order_id = db.Column(db.Integer , primary_key=True)
     order_user = db.Column(db.Integer , ForeignKey(User.id))
-    data = db.Column(db.TIMESTAMP)
+    date = db.Column(db.TIMESTAMP, server_default=func.now())
 
 class OrderProducts(db.Model):
     id = db.Column(db.Integer,primary_key=True)

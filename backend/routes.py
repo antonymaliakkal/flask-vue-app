@@ -1,10 +1,7 @@
 from flask import request,jsonify
-<<<<<<< HEAD
-from celery_app import app
+from celery_app import app, sendProductSummary
 from db_instance import db
-=======
-from app import app,db,redis_store
->>>>>>> 5ce93233dc6da72e41d3057fb3d4881ea69130ee
+from app import redis_store
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 import json
@@ -336,3 +333,11 @@ def caching():
                 redis_store.expire(i.name,3600)
                 print('ADDED TO REDIS' , i.name)
             return jsonify({'product' : temp , 'message':'fetched from database'})
+        
+@app.route("/productsummary", methods=['POST'])
+@jwt_required()
+def mailProds():
+    mail = request.get_json()['mail']
+    sendProductSummary(mail)
+    return jsonify({'message':'Sumary report email scheduled'})
+    

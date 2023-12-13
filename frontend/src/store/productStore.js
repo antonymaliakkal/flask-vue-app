@@ -14,7 +14,7 @@ const productStore = reactive({
   products: {},
   prodId: '',
   prodPos: '',
-  prodObj: initProdObj,
+  prodObj: {...initProdObj},
   search : '',
   async get() {
     console.log('product store')
@@ -28,7 +28,7 @@ const productStore = reactive({
       .then(response => {
         console.log(response.data['message'])
         this.products[this.prodObj.id] = this.prodObj
-        this.prodObj = initProdObj
+        this.prodObj = {...initProdObj}
       })
     window.alert('Product addedd successfully!');
   },

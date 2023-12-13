@@ -5,17 +5,36 @@
 <script setup>
 import { userStore } from "../store/userStore";
 import LogIn from "../components/LogIn.vue";
-import { productStore } from "../store/productStore"
+import { productStore } from "../store/productStore";
 import router from "@/router";
 
 function cart() {
-    router.push('/cart')
+  router.push("/cart");
 }
 
 function home() {
-  router.push('/')
+  router.push("/");
 }
 
+function exportcsv() {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userStore.token}`,
+    },
+    body: JSON.stringify({ mail: userStore.username }),
+  };
+  fetch("http://localhost:5000/productsummary", options)
+    .then((response) => {
+      if (response.status == 200) {
+        alert("Product summary has been mailed!");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 </script>
 
 <template>
@@ -43,7 +62,11 @@ function home() {
             aria-label="Search"
             v-model="productStore.search"
           />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="button" @click="productStore.searching()">
+          <button
+            class="btn btn-outline-success my-2 my-sm-0"
+            type="button"
+            @click="productStore.searching()"
+          >
             Search
           </button>
         </form>
@@ -68,19 +91,33 @@ function home() {
               aria-haspopup="true"
               aria-expanded="false"
             >
+              {{ userStore.username }}
             </a>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="button" @click="cart()">
-              CART  
-            </button>
             <div
               class="dropdown-menu"
               style="right: 0; left: unset"
               aria-labelledby="navbarDropdown"
             >
-
-
               <p class="dropdown-item" @click="userStore.logOut()">LogOut</p>
             </div>
+          </li>
+          <li class="nav-item">
+            <button
+              class="btn btn-outline-success my-2 my-sm-0"
+              type="button"
+              @click="cart()"
+              v-if="userStore.role == 'user'"
+            >
+              Cart
+            </button>
+            <button
+              class="btn btn-outline-success my-2 my-sm-0"
+              type="button"
+              @click="exportcsv()"
+              v-else-if="userStore.role == 'manager'"
+            >
+              Export
+            </button>
           </li>
         </ul>
       </div>
