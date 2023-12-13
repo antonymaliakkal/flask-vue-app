@@ -5,6 +5,7 @@
 <script setup>
 import Categories from "../components/Admin/Categories.vue";
 import ManagerRequest from "../components/Admin/ManagerRequest.vue";
+import CategoryRequest from "../components/Admin/CategoryRequests.vue";
 import { adminStore } from "../store/adminStore";
 </script>
 <template>
@@ -20,6 +21,7 @@ import { adminStore } from "../store/adminStore";
     <div class="content w-100 p-3">
       <Categories v-if="adminStore.path == 1" />
       <ManagerRequest v-if="adminStore.path == 2" />
+      <CategoryRequest v-if="adminStore.path == 2" />
     </div>
   </div>
 </template>

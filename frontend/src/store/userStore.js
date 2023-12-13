@@ -5,6 +5,7 @@ import { reactive } from 'vue'
 const userStore = reactive({
   token: localStorage.getItem('token') == 'null' ? '' : localStorage.getItem('token'),
   username: localStorage.getItem('username'),
+  role: localStorage.getItem('username'),
   logOut() {
     console.log('logout');
     localStorage.setItem("token", null);
@@ -29,8 +30,10 @@ const userStore = reactive({
       localStorage.setItem("logged", true);
       this.token = response.data['access_token']
       this.username = response.data['username']
+      this.role = response.data["role"]
 
       if (localStorage.getItem("role") == "admin") router.push("/admin");
+      else if (localStorage.getItem("role") == "manager") router.push("/manager");
       else if (localStorage.getItem("role") == "user") router.push("/");
     } else {
       alert('Bad credentials')
@@ -38,6 +41,9 @@ const userStore = reactive({
   },
   async signUp(email, password, role) {
     const response = await axios.post('http://localhost:5000/signup', { email, password, role })
+
+    alert('Succesfully signed up. Please Log In.')
+    router.push('/')
     return response.status
   }
 })

@@ -1,6 +1,7 @@
 <script setup>
 import { adminStore } from "../../store/adminStore";
 import { categoryStore } from "../../store/miscStore";
+import { userStore } from "../../store/userStore";
 </script>
 <template>
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -16,7 +17,13 @@ import { categoryStore } from "../../store/miscStore";
         >
           Edit Category
         </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          v-if="userStore.role != 'manager'"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -46,7 +53,12 @@ import { categoryStore } from "../../store/miscStore";
         <div class="dropdown-divider"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          data-dismiss="modal"
+          v-if="userStore.role != 'manager'"
+        >
           Close
         </button>
         <button

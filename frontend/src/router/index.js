@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminPage from './../views/Admin.vue'
 import HomePage from './../views/HomePage.vue'
 // import CartPage from './../views/Cart.vue'
+import ManagerPage from './../views/ManagerPage.vue'
 
 
 const router = createRouter({
@@ -21,6 +22,14 @@ const router = createRouter({
       meta : {
         requiresAuth : true ,
         roles : ['admin']
+      }
+    },
+    {
+      path : '/manager',
+      component : ManagerPage,
+      meta : {
+        requiresAuth : true ,
+        roles : ['manager']
       }
     },
   ],

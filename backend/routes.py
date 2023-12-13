@@ -1,5 +1,6 @@
 from flask import request,jsonify
-from app import app,db
+from celery_app import app
+from db_instance import db
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 
@@ -30,7 +31,8 @@ def login():
     if not user or user.password != data['password']:
        return jsonify({'message' : 'Incorrect password/user' , 'login' : False})
     # access_token = create_access_token(identity=user.id, additional_claims={'role': user.role})
-    
+    user.last_visited = func.now()
+    db.session.commit()
     access_token = create_access_token(identity={'id': user.id, 'role': user.role})   
     print(access_token)
     return jsonify({'message' : 'Login successful' , 'login' : True , 'access_token' : access_token , 'role' : user.role, 'username': user.username , 'user_id' : user.id})
@@ -97,6 +99,38 @@ def create_cat():
     data = {'key': new_cat.id, 'value':{'name': new_cat.name, 'desc':new_cat.description}}
     return jsonify({'message' : 'Category created', 'data':data})
 
+@app.route('/category_request',methods = ['POST', 'GET', 'PUT', 'DELETE'])
+def create_cat_req():
+    if request.method == 'POST':
+        data = request.get_json()
+        new_cat = CategoryRequest(name = data.get('name') , description = data.get('description') )
+        db.session.add(new_cat)
+        db.session.commit()
+        data = {'key': new_cat.id, 'value':{'name': new_cat.name, 'description':new_cat.description}}
+        return jsonify({'message' : 'Category created', 'data':data})
+    
+    elif request.method == 'GET':
+        requests = CategoryRequest.query.filter_by(status=StatusEnum.PENDING).all()
+        req_doc = {}
+        for i in requests:
+            req_doc[i.id] = {'name': i.name, 'description': i.description}
+        return jsonify({'requests': req_doc})
+    
+    elif request.method == 'PUT':
+        data = request.get_json()
+        req = CategoryRequest.query.filter_by(id=data['id']).first()
+        new_cat = Category(name = req.name , description = req.description)
+        db.session.add(new_cat)
+        req.status = StatusEnum.INACTIVE
+        db.session.commit()
+        return jsonify({'message' : 'Request accepted'})
+    
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        CategoryRequest.query.filter_by(id = data['id']).update({'status': StatusEnum.INACTIVE})
+        db.session.commit()
+        return jsonify({'message' : 'Request rejected'})
+
 @app.route('/edit_category' , methods = ['PATCH','GET','POST'])
 def edit_cat():
     if request.method == 'GET':
@@ -161,6 +195,20 @@ def view_prod():
         product[i.id] = {'name' : i.name , 'cat' : i.cat_id , 'desc' : i.description , 'price' : i.price , 'stock' : i.stock}
     return jsonify({'product': product})
 
+@app.route('/edit_product',methods=['POST'])
+def edit_prod():
+    data = request.get_json()
+    print(data.get('id'))
+
+    prod = Product.query.filter_by(id=data['id']).update(data)
+    # if cat:
+    #     cat.name = data.get('name')
+    #     cat.description = data.get('desc')
+    db.session.commit()
+    # data = {'key': cat.id, 'value':{'name': cat.name, 'desc': cat.description}}
+    return {'message' : 'Product edited', 'data': prod}
+    # return jsonify({'message' : 'Category error'})
+
 # @app.route('/filter_products',methods=['GET'])
     
 
@@ -168,6 +216,7 @@ def view_prod():
 @app.route('/delete_product',methods=['POST','GET'])
 def delete_prod():
     data = request.get_json()
+    print(data)
     p_id = data['pid']
     prod = Product.query.get(p_id)
     print(prod)

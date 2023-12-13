@@ -43,19 +43,82 @@ const categoryStore = reactive({
         }
       });
   },
-  async add(){
-    axios
-      .post("http://localhost:5000/create_category", { name: this.catName, desc: this.catDesc })
-      .then((response) => {
-        if (response.status == 200) {
-          this.categories.push(response.data.data)
-        } else {
-          alert('An error occured')
-        }
-      });
+  async add() {
+    if (localStorage.getItem('role') == 'manager') {
+      categoryRequestStore.request({ name: this.catName, description: this.catDesc })
+      this.catName = ''
+      this.catDesc = ''
+    } else {
+      axios
+        .post("http://localhost:5000/create_category", { name: this.catName, desc: this.catDesc })
+        .then((response) => {
+          if (response.status == 200) {
+            this.categories.push(response.data.data)
+          } else {
+            alert('An error occured')
+          }
+        });
+    }
   }
 })
 
+const initCatObj = {
+  name: '',
+  descripiton: ''
+}
+const categoryRequestStore = reactive({
+  catObj: initCatObj,
+  catReqId: '',
+  catRequests: {},
+  async request(catObj) {
+    axios
+      .post("http://localhost:5000/category_request", catObj)
+      .then(response => {
+        if (response.status == 200) {
+          alert('Request created succesfully!')
+        } else {
+          alert('An error occured')
+        }
+      })
+  },
+  async approve(id) {
+    axios
+      .put("http://localhost:5000/category_request", { id: id })
+      .then(response => {
+        if (response.status == 200) {
+          delete this.catRequests[id]
+          alert('Request approved succesfully!')
+        } else {
+          alert('An error occured')
+        }
+      })
+  },
+  async reject(id) {
+    axios
+      .delete("http://localhost:5000/category_request", { data: {id: id} })
+      .then(response => {
+        if (response.status == 200) {
+          delete this.catRequests[id]
+          alert('Request rejected succesfully!')
+        } else {
+          alert('An error occured')
+        }
+      })
+  },
+  async get() {
+    axios
+      .get("http://localhost:5000/category_request")
+      .then(response => {
+        if (response.status == 200) {
+          this.catRequests = response.data.requests
+        } else {
+          alert('An error occured')
+        }
+      })
+  },
+})
+
 export {
-  categoryStore
+  categoryStore,
+  categoryRequestStore
 }
