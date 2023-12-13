@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminPage from './../views/Admin.vue'
 import HomePage from './../views/HomePage.vue'
 // import CartPage from './../views/Cart.vue'
+
 import ProdCreate from './../components/ProdCreate.vue'
 import Cart from './../views/Cart.vue'
 
@@ -31,7 +32,7 @@ const router = createRouter({
     {
       path : '/cart',
       component : Cart
-    } 
+    },
   ],
 });
 

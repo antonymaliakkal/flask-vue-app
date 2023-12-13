@@ -32,6 +32,13 @@ const cartStore = reactive({
                 console.log(response.data['message'])
             })
         }
+    },
+
+    async order(){
+        console.log('order function')
+        if(userStore.token) {
+            await axios.get('http://localhost:5000/order' , this.config)
+        }   
     }
 })
 

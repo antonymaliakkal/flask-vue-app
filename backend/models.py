@@ -30,10 +30,13 @@ class Cart(db.Model):
     product_id = db.Column(db.Integer , ForeignKey(Product.id))
     quantity = db.Column(db.Integer)
 
-class Orders(db.Integer):
-    id = db.Column(db.Integer,primary_key=True)
-    user_id = db.Column(db.Integer , ForeignKey(User.id))
-    product_id = db.Column(db.Integer , ForeignKey(Product.id))
-    quantity = db.Column(db.Integer)
-    price = db.Column(db.Integer)
+class Orders(db.Model):
+    order_id = db.Column(db.Integer , primary_key=True)
+    order_user = db.Column(db.Integer , ForeignKey(User.id))
+    data = db.Column(db.DateTime)
 
+class Order_product(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    order_id = db.Column(db.Integer , ForeignKey(Orders.order_id))
+    produc_id = db.Column(db.Integer , ForeignKey(Product.id))
+    quantity = db.Column(db.Integer)
