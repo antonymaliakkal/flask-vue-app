@@ -359,7 +359,7 @@ def checkout():
         db.session.commit()
         print('reduced stock')
 
-        #add products to Order_product table
+        #add products to OrderProducts table
         print('adding product to orders')
         new_product = OrderProducts(order_id = order , produc_id = i.product_id , quantity = i.quantity)
         db.session.add(new_product)
