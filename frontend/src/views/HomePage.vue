@@ -4,108 +4,151 @@ import { categoryStore } from '../store/miscStore.js'
 import { onMounted, reactive, ref, watch } from 'vue';
 import { userStore } from '@/store/userStore';
 import { cartStore } from '@/store/cartStore';
-// import categoryStore from './../store/miscStore';
 
 let products = reactive({})
 let selected = ref('')
-let quantity = ref(0)
+let x = ref('')
+let quantity = reactive({})
+let buy = reactive({})
 
 watch(selected, (newValue) => {
     if (newValue == 'all') {
         products.value = productStore.products
+        
     } else {
         products.value = Object.values(productStore.products).filter(products => (products.cat == newValue))
     }
 })
 
+
+
 onMounted(async () => {
     await productStore.get();
-    await categoryStore.get()
-    selected.value = 'all'
+    await categoryStore.get();
+    selected.value = 'all'  
+
+    if(userStore.token) {
+        await cartStore.get()
+        for (x in products.value) {
+            console.log(x)
+            let y = products.value[x].name
+            if(incart(y)){
+                buy[y] = true
+            }   
+            else {
+                buy[y] = false
+            }
+        }
+        console.log(buy)
+    }
+   
 },
 
 )
 
+
+ function incart(key) {
+       for (x in cartStore.cart) {
+            if(key == cartStore.cart[x].name) {
+                return true
+            }
+       }
+       return false 
+ }
+
+function quant() {
+    console.log(products)
+    for (x in products.value) {
+        console.log(x);  
+        quantity[x] = 0;      
+    }
+
+}
+
 function viewcat(key) {
+    quant()
     selected.value = key;
 }
 
-function addcart(key){
-    if(!userStore.isLoggedIn){
-        console.log('not logged in')
+function addcart(key,name){
+    if(userStore.token){
+        console.log(key)
+        let data = {'p_id' : key , 'qty' : quantity[key] , 'user_id' : localStorage.getItem('id')}
+        console.log(quantity[key])
+        console.log(data)
+        cartStore.add_cart(data)
+        buy[name] = true
+
     }
     else {
-        let data = {'p_id' : key , 'quantity' : quantity , 'id' : userStore.id}
-        cartStore.add_cart(data)
+        console.log(userStore.isLoggedIn)
+        console.log('not logged in!!!')
     }
 }
 
 </script>
 <template>
-    <h1>HOME PAGE</h1>
     <div class="main">
-        <div class="categories">
+        <div class="col card">
             <!-- Category list -->
-            <ul>
-                <li @click="viewcat('all')">ALL</li>
-                <li v-for="(value, key) in categoryStore.cat_new" :key="key" @click="viewcat(key)">
+            <ul class="list-group list-group-flush">
+                <li class="card-header" @click="viewcat('all')">ALL</li>
+                <li class="list-group-item text-uppercase" v-for="(value, key) in categoryStore.cat_new" :key="key" @click="viewcat(key)">
                     {{ value.name }}
                 </li>
             </ul>
         </div>
-        
-        <div class="products">
-            <!-- Product tabs -->
-            <div class="tab-container">
-                <div v-for="(value, key) in products.value" :key="key" class="tab">
-                    <b>{{ value.name }}</b>
-                    <br>
-                    PRICE: {{ value.price }}
-                    <br>
-                    {{ value.desc }}
-                    <br>
-                    <input v-model="quantity" type="number" min="0" placeholder="Quantity">
-                    <br>
-                    <button @click="addcart(key)" >ADD TO CART</button>
+
+        <div class="products parent">
+        <div class="card border-success mb-3 child" style="max-width: 18rem;" v-for="(value, key) in products.value" :key="key">
+            <div class="card-header bg-transparent border-success text-uppercase font-weight-bold">{{ value.name }}</div>
+            <div v-if="buy[value.name]">
+                <div class="card-body text-success">
+                    <h5 class="card-title">₹{{ value.price }}</h5>
+                    <p class="card-text">{{ value.desc }} </p>  
+                </div>   
+                <a class="btn btn-primary text-white">ADDED</a>
+            </div>
+            <div v-else>
+                <div class="card-body text-success">
+                    <h5 class="card-title">₹{{ value.price }}</h5>
+                    <p class="card-text">{{ value.desc }} </p>
+                    <input class="card-text" v-model="quantity[value.id]" type="number" min="0" placeholder="Quantity">            
+                    </div>
+                    <a @click="addcart(value.id , value.name)" class="btn btn-primary text-white">ADD TO CART</a>
                 </div>
             </div>
-        </div>
+
+        
+
     </div>
+
+    </div>
+
+
+
 </template>
-
 <style>
-.main {
-    display: flex;
-}
+    .main {
+        display : flex;
+    }
 
-.categories {
-    flex: 1;
-    /* Categories take up remaining space */
-    overflow-y: auto;
-    /* Enable vertical scrolling if needed */
-    max-height: 100vh;
-    /* Limit maximum height */
-}
+    .col {
+        flex : 1;
+    }
 
-.products {
-    flex: 3;
-    /* Products take up 3/4 of the space */
-    overflow-x: auto;
-    /* Enable horizontal scrolling */
-}
+    .products {
+        flex : 3
 
-.tab-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    /* Adjust gap between tabs */
-}
+    }
 
-.tab {
-    width: calc(25% - 20px);
-    /* Each tab takes up 25% width with 20px gap */
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 20px;
-    /* Adjust margin between tabs */
-}</style>
+    .parent {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .child {
+        flex: 1 0 30%;
+        margin-right: 10px;
+    }
+</style>

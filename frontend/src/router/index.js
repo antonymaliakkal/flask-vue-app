@@ -6,7 +6,7 @@ import AdminPage from './../views/Admin.vue'
 import HomePage from './../views/HomePage.vue'
 // import CartPage from './../views/Cart.vue'
 import ManagerPage from './../views/ManagerPage.vue'
-
+import Cart from './../views/Cart.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -32,6 +32,10 @@ const router = createRouter({
         roles : ['manager']
       }
     },
+    {
+      path : '/cart',
+      component : Cart
+    } 
   ],
 });
 
@@ -43,7 +47,7 @@ router.beforeEach((to,from,next) => {
       const allowedroles = to.meta.roles;
 
       if(!allowedroles.includes(role)) {
-        next('/register');
+        next('/');
       } else {
         next();
       }

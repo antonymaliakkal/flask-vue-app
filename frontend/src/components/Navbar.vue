@@ -5,12 +5,23 @@
 <script setup>
 import { userStore } from "../store/userStore";
 import LogIn from "../components/LogIn.vue";
+import { productStore } from "../store/productStore"
+import router from "@/router";
+
+function cart() {
+    router.push('/cart')
+}
+
+function home() {
+  router.push('/')
+}
+
 </script>
 
 <template>
   <v-fragment>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Priyam Mart</a>
+      <a class="navbar-brand" href="#" @click="home()">Grocery Store</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -30,8 +41,9 @@ import LogIn from "../components/LogIn.vue";
             type="search"
             placeholder="Search"
             aria-label="Search"
+            v-model="productStore.search"
           />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="button" @click="productStore.searching()">
             Search
           </button>
         </form>
@@ -56,13 +68,17 @@ import LogIn from "../components/LogIn.vue";
               aria-haspopup="true"
               aria-expanded="false"
             >
-              {{ userStore.username }}
             </a>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" @click="cart()">
+              CART  
+            </button>
             <div
               class="dropdown-menu"
               style="right: 0; left: unset"
               aria-labelledby="navbarDropdown"
             >
+
+
               <p class="dropdown-item" @click="userStore.logOut()">LogOut</p>
             </div>
           </li>

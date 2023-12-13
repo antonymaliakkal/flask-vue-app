@@ -2,8 +2,15 @@ from models import User
 
 from celery_app import app
 from db_instance import db
-# if __name__ == '__main__':
-#     app.run(debug = True)
+from flask_redis import FlaskRedis
+
+
+
+app.config['REDIS_URL'] = 'redis://localhost:6379'
+app.config['REDIS_DB'] = 0
+
+
+redis_store = FlaskRedis(app)
 
 
 with app.app_context():
