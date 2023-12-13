@@ -34,6 +34,12 @@
       return t.toLocaleString('en-IN')
    }
 
+
+   function checkout() {
+      cartStore.order()
+      cartStore.get()
+   }
+
 </script>
 <template>
     <div class="main">
@@ -60,7 +66,7 @@
           <h5>BILLING DETAILS</h5>
           <p>USER NAME : {{ name }}</p>
           <p>TOTAL : ₹{{ total() }}</p>
-          <a class="btn btn-secondary text-white">Checkout</a>
+          <a  @click="checkout()" class="btn btn-success text-white">Checkout</a>
 
         </div>
     </div>

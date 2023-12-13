@@ -107,16 +107,28 @@ function addcart(key,name){
                     <h5 class="card-title">₹{{ value.price }}</h5>
                     <p class="card-text">{{ value.desc }} </p>  
                 </div>   
-                <a class="btn btn-primary text-white">ADDED</a>
+                <a class="btn btn-primary text-white">ADDED TO CART</a>
             </div>
             <div v-else>
+                <div v-if="value.stock == 0">
+                <div class="card-body text-success" >
+                    <h5 class="card-title">₹{{ value.price }}</h5>
+                    <p class="card-text">{{ value.desc }} </p>
+                </div>
+                <a class="btn btn btn-danger text-white" >OUT OF STOCK</a>
+
+                </div>   
+                <div v-else>    
                 <div class="card-body text-success">
                     <h5 class="card-title">₹{{ value.price }}</h5>
                     <p class="card-text">{{ value.desc }} </p>
-                    <input class="card-text" v-model="quantity[value.id]" type="number" min="0" placeholder="Quantity">            
-                    </div>
+                    <input class="card-text" v-model="quantity[value.id]" type="number" min="0" max=value.stock placeholder="Quantity">            
+                </div>
                     <a @click="addcart(value.id , value.name)" class="btn btn-primary text-white">ADD TO CART</a>
                 </div>
+                    
+
+            </div>
             </div>
 
         
@@ -131,10 +143,13 @@ function addcart(key,name){
 <style>
     .main {
         display : flex;
+        
+
     }
 
     .col {
         flex : 1;
+        cursor: pointer;
     }
 
     .products {

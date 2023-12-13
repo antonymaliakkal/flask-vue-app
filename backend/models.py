@@ -47,6 +47,7 @@ class Cart(db.Model):
 class Orders(db.Model):
     order_id = db.Column(db.Integer , primary_key=True)
     order_user = db.Column(db.Integer , ForeignKey(User.id))
+<<<<<<< HEAD
     date = db.Column(db.TIMESTAMP, server_default=func.now())
 
 class OrderProducts(db.Model):
@@ -55,3 +56,12 @@ class OrderProducts(db.Model):
     product_id = db.Column(db.Integer , ForeignKey(Product.id))
     product = db.relationship('Product', backref='order_products')
     quantity = db.Column(db.Integer)
+=======
+    data = db.Column(db.DateTime)
+
+class Order_product(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    order_id = db.Column(db.Integer , ForeignKey(Orders.order_id))
+    produc_id = db.Column(db.Integer , ForeignKey(Product.id))
+    quantity = db.Column(db.Integer)
+>>>>>>> eb25130f00fbbe7d89fca4de06b8cc859f6625aa

@@ -5,6 +5,7 @@ from app import redis_store
 from models import*
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity
 import json
+from datetime import datetime
 
 def fetch_redis(x):
     data = redis_store.get(x)
@@ -283,16 +284,6 @@ def add_cart():
         # print(temp)
         return jsonify({'cart' : temp})    
 
-    # elif request.method =='DELETE':
-    #     print('cart delete')
-    #     current_user = get_jwt_identity()
-    #     print(current_user)
-
-    #     data = request.get_json()
-    #     cart = Cart.query.get(data['id'])
-    #     db.session.delete(cart)
-    #     db.session.commit()
-    #     return jsonify({'message' : 'Cart Item deleted'})
 
 @app.route('/cart_delete' , methods = ['POST','DELETE'])
 def cart_deleted():
@@ -304,9 +295,7 @@ def cart_deleted():
         return jsonify({'message' : 'Cart Item deleted'})
 
 @app.route('/cache',methods=['POST','GET'])
-def caching():
-    
-    
+def caching():    
     data = request.get_json()
     print(data)
     search = data['search']
@@ -341,3 +330,47 @@ def mailProds():
     sendProductSummary(mail)
     return jsonify({'message':'Sumary report email scheduled'})
     
+@app.route('/order' , methods=['POST','GET'])
+@jwt_required()
+def checkout():
+    current_user = get_jwt_identity()
+    current_user = current_user['id']
+    print(current_user)
+
+    cart = Cart.query.filter_by(user_id=current_user).all()
+    print(cart)
+    print(datetime.now())
+
+    #creating a new order
+    new_order = Orders(order_user = current_user , data = datetime.now())
+    db.session.add(new_order)
+    db.session.commit()
+
+    order = new_order.order_id
+    print(new_order.order_id)
+
+    for i in cart:
+        #reduce the product stock
+        print('reducing stock')
+        print(i.product_id)
+        prod = Product.query.filter(Product.id == i.product_id).first()
+        print(prod , i.quantity)
+        prod.stock = prod.stock - i.quantity
+        db.session.commit()
+        print('reduced stock')
+
+        #add products to Order_product table
+        print('adding product to orders')
+        new_product = OrderProducts(order_id = order , produc_id = i.product_id , quantity = i.quantity)
+        db.session.add(new_product)
+        db.session.commit() 
+        print('added product to orders')
+
+        #delete product from cart
+        print('deleting product from cart')
+        db.session.delete(i)
+        db.session.commit()
+        print('deleted product from cart')
+
+
+    return jsonify({'message' : 'added to order'})

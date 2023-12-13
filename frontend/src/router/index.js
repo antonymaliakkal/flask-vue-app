@@ -5,7 +5,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AdminPage from './../views/Admin.vue'
 import HomePage from './../views/HomePage.vue'
 // import CartPage from './../views/Cart.vue'
+<<<<<<< HEAD
 import ManagerPage from './../views/ManagerPage.vue'
+=======
+
+import ProdCreate from './../components/ProdCreate.vue'
+>>>>>>> eb25130f00fbbe7d89fca4de06b8cc859f6625aa
 import Cart from './../views/Cart.vue'
 
 const router = createRouter({
@@ -35,7 +40,7 @@ const router = createRouter({
     {
       path : '/cart',
       component : Cart
-    } 
+    },
   ],
 });
 
