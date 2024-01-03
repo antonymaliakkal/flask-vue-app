@@ -1,0 +1,1 @@
+Online grocery and essentials store using Vue for UI and Flask, SQLite as backend Celery is used for asynchronous task queues to process background tasks - sending emails, reminders etc. Redis is used for in-memory caching.
