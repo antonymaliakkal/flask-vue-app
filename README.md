@@ -1,8 +1,8 @@
 1. To install frontend part,
-   cd to frontend
-   then npm install
-   npm run dev
-
+   cd to frontend;
+   then npm install;
+   npm run dev   
+	 	
 2. To install the backend part,
     cd to backend 
     python3 -m venv .venv (to create virtual environment)
