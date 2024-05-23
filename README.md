@@ -1,8 +1,8 @@
 
 # Grocery Store Website
 
-This project is an online platform for purchasing groceries and essential items, designed with a modern and efficient tech stack. The application features a Vue.js-based user interface, a Flask backend with SQLite for persistent storage, and Celery integrated with Redis for handling asynchronous tasks.
-
+This project is an online platform for purchasing groceries and essential items, designed with a modern and efficient tech stack. The application features a Vue.js-based user interface, a Flask backend with SQLite for persistent storage, and Celery integrated with Redis for handling asynchronous tasks.The project has three login the user , manager & admin.User can search & purchase items , the manager & admin can create , edit and delete product categories and products. The manager can also view monthly, weekly and daily purchse report.Redis is used to cache the frequently searched items by user for faster access.Celery is used to send mails of purschase , remainders etc..
+ 
 
 
 
