@@ -22,17 +22,6 @@ This project is an online platform for purchasing groceries and essential items,
 
 ## Installation
 
-#### Prerequisites
-```bash
-  Python 3.x
-  Git
-  POX SDN controller
-  Mininet
-  TensorFlow
-  Keras
-  NumPy
-  Scikit-learn
-```
 #### 1. Clone the Repository:
 ```
 git clone https://github.com/antonymaliakkal/grocery-store-website.git
