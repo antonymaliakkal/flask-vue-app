@@ -70,12 +70,18 @@ npm run serve
 ```
 #### 5. Starting Celery:
 - In a separate terminal navigate to backend, start the Celery worker:
-```celery -A app.celery worker --loglevel=info```
+```
+celery -A app.celery worker --loglevel=info
+```
 - In a separate terminal navigate to backend, start the Celery beat(to schedule tasks):
-```celery -A app_instance.celery_app beat --loglevel INFO```
+```
+celery -A app_instance.celery_app beat --loglevel INFO
+```
 
 #### 6. Starting Redis:
 
 - Ensure Redis server is running. If not, start Redis using:
-```redis-server```
+```
+redis-server
+```
 
