@@ -1,5 +1,5 @@
 This project is an online platform for purchasing groceries and essential items, designed with a modern and efficient tech stack. The application features a Vue.js-based user interface, a Flask backend with SQLite for persistent storage, and Celery integrated with Redis for handling asynchronous tasks.
-<br />
+<br /><br />
 **Features** <br />
 ● User-Friendly Interface: The front end is built with Vue.js, providing a smooth and responsive user experience.<br />
 ● Secure and Robust Backend: Powered by Flask, the backend ensures secure data handling and efficient processing.<br />
